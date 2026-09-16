@@ -31,6 +31,224 @@ form{display:grid;gap:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:1
 footer{padding:35px 0;color:#64748b;border-top:1px solid var(--line);font-size:13px}
 @media(max-width:800px){.links a:not(.navcta){display:none}.heroGrid,.formWrap{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.categories{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.hero{padding-top:52px}}
 </style>
+ <!-- DealSetu Lead Tracker -->
+<section id="leadTracker" style="padding:40px 0;background:#f8fafc">
+  <div class="container">
+    <div class="sectionHead">
+      <span class="eyebrow">Private Lead Tracker</span>
+      <h2>📋 Lead Tracker</h2>
+      <p>इस device/browser पर leads का basic record रखें।</p>
+    </div>
+
+    <div class="card formCard">
+      <form id="leadForm">
+        <div class="row">
+          <div>
+            <label>Product / Service
+              <input id="leadProduct" required placeholder="जैसे Cement">
+            </label>
+          </div>
+
+          <div>
+            <label>Buyer Location
+              <input id="leadLocation" required placeholder="Jaipur, Rajasthan">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Supplier
+              <input id="leadSupplier" required placeholder="Supplier name">
+            </label>
+          </div>
+
+          <div>
+            <label>Status
+              <select id="leadStatus">
+                <option>New Lead</option>
+                <option>Supplier Contacted</option>
+                <option>Quotation Received</option>
+                <option>Deal in Progress</option>
+                <option>Completed</option>
+                <option>Closed</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Agreed Commission
+              <input id="leadCommission" placeholder="₹ / %">
+            </label>
+          </div>
+
+          <div style="display:flex;align-items:end">
+            <button class="btn primary" type="submit">
+              + Lead Add करें
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div id="leadMessage" class="success" style="margin-top:15px">
+        Lead successfully added.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;overflow-x:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px">
+        <h3 style="margin:0">All Leads</h3>
+        <button class="btn" type="button" onclick="clearAllLeads()">
+          Delete All
+        </button>
+      </div>
+
+      <div id="leadTable"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const LEAD_KEY = "dealsetu_leads";
+
+function getLeads(){
+  return JSON.parse(localStorage.getItem(LEAD_KEY) || "[]");
+}
+
+function saveLeads(leads){
+  localStorage.setItem(LEAD_KEY, JSON.stringify(leads));
+}
+
+function generateLeadId(){
+  const leads = getLeads();
+  return "DS-" + String(leads.length + 1).padStart(4,"0");
+}
+
+function renderLeads(){
+  const leads = getLeads();
+  const box = document.getElementById("leadTable");
+
+  if(leads.length === 0){
+    box.innerHTML =
+      '<p style="color:#64748b">अभी कोई lead नहीं है। ऊपर से पहली lead add करें।</p>';
+    return;
+  }
+
+  let html = `
+    <table style="width:100%;border-collapse:collapse;min-width:750px">
+      <thead>
+        <tr style="text-align:left;border-bottom:2px solid #e2e8f0">
+          <th style="padding:10px">Lead ID</th>
+          <th style="padding:10px">Product</th>
+          <th style="padding:10px">Location</th>
+          <th style="padding:10px">Supplier</th>
+          <th style="padding:10px">Status</th>
+          <th style="padding:10px">Commission</th>
+          <th style="padding:10px">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  leads.forEach((lead,index)=>{
+    html += `
+      <tr style="border-bottom:1px solid #e2e8f0">
+        <td style="padding:10px"><strong>${lead.id}</strong></td>
+        <td style="padding:10px">${escapeHTML(lead.product)}</td>
+        <td style="padding:10px">${escapeHTML(lead.location)}</td>
+        <td style="padding:10px">${escapeHTML(lead.supplier)}</td>
+        <td style="padding:10px">
+          <select onchange="updateStatus(${index},this.value)">
+            ${[
+              "New Lead",
+              "Supplier Contacted",
+              "Quotation Received",
+              "Deal in Progress",
+              "Completed",
+              "Closed"
+            ].map(s =>
+              `<option ${lead.status===s?"selected":""}>${s}</option>`
+            ).join("")}
+          </select>
+        </td>
+        <td style="padding:10px">${escapeHTML(lead.commission || "-")}</td>
+        <td style="padding:10px">
+          <button class="btn" type="button" onclick="deleteLead(${index})">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+
+  html += "</tbody></table>";
+  box.innerHTML = html;
+}
+
+function escapeHTML(text){
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+document.getElementById("leadForm").addEventListener("submit",function(e){
+  e.preventDefault();
+
+  const leads = getLeads();
+
+  const lead = {
+    id: generateLeadId(),
+    product: document.getElementById("leadProduct").value,
+    location: document.getElementById("leadLocation").value,
+    supplier: document.getElementById("leadSupplier").value,
+    status: document.getElementById("leadStatus").value,
+    commission: document.getElementById("leadCommission").value
+  };
+
+  leads.push(lead);
+  saveLeads(leads);
+
+  this.reset();
+
+  document.getElementById("leadMessage").style.display = "block";
+
+  renderLeads();
+
+  setTimeout(()=>{
+    document.getElementById("leadMessage").style.display = "none";
+  },2000);
+});
+
+function updateStatus(index,status){
+  const leads = getLeads();
+  leads[index].status = status;
+  saveLeads(leads);
+  renderLeads();
+}
+
+function deleteLead(index){
+  if(!confirm("क्या आप यह lead delete करना चाहते हैं?")) return;
+
+  const leads = getLeads();
+  leads.splice(index,1);
+  saveLeads(leads);
+  renderLeads();
+}
+
+function clearAllLeads(){
+  if(!confirm("क्या आप सभी leads delete करना चाहते हैं?")) return;
+
+  localStorage.removeItem(LEAD_KEY);
+  renderLeads();
+}
+
+renderLeads();
+ </script>
 </head>
 <body>
 <nav><div class="container navin">
