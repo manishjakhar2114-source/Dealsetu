@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://manishjakhar2114-source.github.io/Dealsetu/sitemap.xml
