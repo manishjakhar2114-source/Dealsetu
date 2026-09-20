@@ -774,139 +774,91 @@ renderLeads();
 
 <script>
 <script>
+const DEMO_WA = "919352735379";
 
-const DEMO_WA="919352735379";
-
-
-function addFormLead(obj,type){
-
+function addFormLead(obj, type) {
   const leads = getLeads();
 
-  let lead;
+  const lead = {
+    id: generateLeadId(),
+    product: type === "buyer"
+      ? (obj.product || "-")
+      : (obj.products || "-"),
 
-  if(type === "buyer"){
+    location: obj.location || "-",
 
-    lead = {
-      id: generateLeadId(),
-      product: obj.product || "-",
-      location: obj.location || "-",
-      supplier: "Pending",
-      status: "New Lead",
-      commission: "-"
-    };
+    supplier: type === "supplier"
+      ? (obj.business || "-")
+      : "Pending",
 
-  }else{
-
-    lead = {
-      id: generateLeadId(),
-      product: obj.products || "-",
-      location: obj.location || "-",
-      supplier: obj.business || "-",
-      status: "New Lead",
-      commission: "-"
-    };
-
-  }
+    status: "New Lead",
+    commission: "-"
+  };
 
   leads.push(lead);
-
   saveLeads(leads);
-
   renderLeads();
 
   return lead.id;
-
 }
 
-
-function sendWA(form,successId,type){
-
+function sendWA(form, successId, type) {
   const d = new FormData(form);
   const obj = Object.fromEntries(d.entries());
 
-  let msg;
+  let msg = "";
 
-  if(type === "buyer"){
-
+  if (type === "buyer") {
     msg =
 `DealSetu Buyer Requirement
 
-Name: ${obj.name}
-Mobile: ${obj.phone}
-Product/Service: ${obj.product}
+Name: ${obj.name || "-"}
+Mobile: ${obj.phone || "-"}
+Product/Service: ${obj.product || "-"}
 Quantity: ${obj.qty || "-"}
 Budget: ${obj.budget || "-"}
 Location: ${obj.location || "-"}
 Details: ${obj.details || "-"}`;
-
-  }else{
-
+  } else {
     msg =
 `DealSetu Supplier Enquiry
 
-Business: ${obj.business}
-Contact: ${obj.contact}
-Mobile: ${obj.phone}
-Location: ${obj.location}
-Products/Services: ${obj.products}
-Business Type: ${obj.type}
+Business: ${obj.business || "-"}
+Contact: ${obj.contact || "-"}
+Mobile: ${obj.phone || "-"}
+Location: ${obj.location || "-"}
+Products/Services: ${obj.products || "-"}
+Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
-
   }
 
+  // WhatsApp URL
+  const waUrl =
+    "https://wa.me/" + DEMO_WA + "?text=" + encodeURIComponent(msg);
 
-  /* Save lead in Lead Tracker */
+  // IMPORTANT: WhatsApp directly from submit/click
+  window.open(waUrl, "_blank");
 
-  const leadId = addFormLead(obj,type);
+  // Lead Tracker
+  addFormLead(obj, type);
 
+  // Success message
+  const success = document.getElementById(successId);
+  if (success) {
+    success.style.display = "block";
+  }
 
-  /* Success message */
-
-  document.getElementById(successId).style.display="block";
-
-
-  /* Open WhatsApp */
-
-  setTimeout(()=>{
-
-    window.open(
-      `https://wa.me/${DEMO_WA}?text=${encodeURIComponent(msg)}`,
-      "_blank"
-    );
-
-  },300);
-
+  form.reset();
 }
 
+document.getElementById("buyerForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  sendWA(this, "buyerSuccess", "buyer");
+});
 
-document
-  .getElementById("buyerForm")
-  .addEventListener("submit",e=>{
-
-    e.preventDefault();
-
-    sendWA(
-      e.target,
-      "buyerSuccess",
-      "buyer"
-    );
-
-  });
-
-
-document
-  .getElementById("supplierForm")
-  .addEventListener("submit",e=>{
-
-    e.preventDefault();
-
-    sendWA(
-      e.target,
-      "supplierSuccess",
-      "supplier"
-    );
-
-  });
-
+document.getElementById("supplierForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  sendWA(this, "supplierSuccess", "supplier");
+});
 </script>
 </body></html>
