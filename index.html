@@ -773,16 +773,140 @@ renderLeads();
 <footer><div class="container"><strong>DealSetu</strong> — आपकी जरूरत, सही supplier तक।<br><span>यह website एक lead-generation/connection demo है। DealSetu स्वयं product quality, price या delivery की guarantee नहीं देता।</span></div></footer>
 
 <script>
+<script>
+
 const DEMO_WA="919352735379";
-function sendWA(form,successId,type){
- const d=new FormData(form), obj=Object.fromEntries(d.entries());
- let msg=type==="buyer"
- ? `DealSetu Buyer Requirement%0A%0AName: ${obj.name}%0AMobile: ${obj.phone}%0AProduct/Service: ${obj.product}%0AQuantity: ${obj.qty||"-"}%0ABudget: ${obj.budget||"-"}%0ALocation: ${obj.location||"-"}%0ADetails: ${obj.details||"-"}`
- : `DealSetu Supplier Enquiry%0A%0ABusiness: ${obj.business}%0AContact: ${obj.contact}%0AMobile: ${obj.phone}%0ALocation: ${obj.location}%0AProducts/Services: ${obj.products}%0ABusiness Type: ${obj.type}%0ADetails: ${obj.details||"-"}`;
- document.getElementById(successId).style.display="block";
- setTimeout(()=>{window.open(`https://wa.me/${DEMO_WA}?text=${msg}`,"_blank");},300);
+
+
+function addFormLead(obj,type){
+
+  const leads = getLeads();
+
+  let lead;
+
+  if(type === "buyer"){
+
+    lead = {
+      id: generateLeadId(),
+      product: obj.product || "-",
+      location: obj.location || "-",
+      supplier: "Pending",
+      status: "New Lead",
+      commission: "-"
+    };
+
+  }else{
+
+    lead = {
+      id: generateLeadId(),
+      product: obj.products || "-",
+      location: obj.location || "-",
+      supplier: obj.business || "-",
+      status: "New Lead",
+      commission: "-"
+    };
+
+  }
+
+  leads.push(lead);
+
+  saveLeads(leads);
+
+  renderLeads();
+
+  return lead.id;
+
 }
-document.getElementById("buyerForm").addEventListener("submit",e=>{e.preventDefault();sendWA(e.target,"buyerSuccess","buyer")});
-document.getElementById("supplierForm").addEventListener("submit",e=>{e.preventDefault();sendWA(e.target,"supplierSuccess","supplier")});
+
+
+function sendWA(form,successId,type){
+
+  const d = new FormData(form);
+  const obj = Object.fromEntries(d.entries());
+
+  let msg;
+
+  if(type === "buyer"){
+
+    msg =
+`DealSetu Buyer Requirement
+
+Name: ${obj.name}
+Mobile: ${obj.phone}
+Product/Service: ${obj.product}
+Quantity: ${obj.qty || "-"}
+Budget: ${obj.budget || "-"}
+Location: ${obj.location || "-"}
+Details: ${obj.details || "-"}`;
+
+  }else{
+
+    msg =
+`DealSetu Supplier Enquiry
+
+Business: ${obj.business}
+Contact: ${obj.contact}
+Mobile: ${obj.phone}
+Location: ${obj.location}
+Products/Services: ${obj.products}
+Business Type: ${obj.type}
+Details: ${obj.details || "-"}`;
+
+  }
+
+
+  /* Save lead in Lead Tracker */
+
+  const leadId = addFormLead(obj,type);
+
+
+  /* Success message */
+
+  document.getElementById(successId).style.display="block";
+
+
+  /* Open WhatsApp */
+
+  setTimeout(()=>{
+
+    window.open(
+      `https://wa.me/${DEMO_WA}?text=${encodeURIComponent(msg)}`,
+      "_blank"
+    );
+
+  },300);
+
+}
+
+
+document
+  .getElementById("buyerForm")
+  .addEventListener("submit",e=>{
+
+    e.preventDefault();
+
+    sendWA(
+      e.target,
+      "buyerSuccess",
+      "buyer"
+    );
+
+  });
+
+
+document
+  .getElementById("supplierForm")
+  .addEventListener("submit",e=>{
+
+    e.preventDefault();
+
+    sendWA(
+      e.target,
+      "supplierSuccess",
+      "supplier"
+    );
+
+  });
+
 </script>
 </body></html>
