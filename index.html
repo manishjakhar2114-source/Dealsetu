@@ -832,15 +832,12 @@ Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
   }
 
-  // WhatsApp URL
-  const waUrl =
-    "https://wa.me/" + DEMO_WA + "?text=" + encodeURIComponent(msg);
-
-  // IMPORTANT: WhatsApp directly from submit/click
-  window.open(waUrl, "_blank");
-
-  // Lead Tracker
-  addFormLead(obj, type);
+  // पहले Lead Tracker में save
+  try {
+    addFormLead(obj, type);
+  } catch (error) {
+    console.error("Lead save error:", error);
+  }
 
   // Success message
   const success = document.getElementById(successId);
@@ -848,7 +845,15 @@ Details: ${obj.details || "-"}`;
     success.style.display = "block";
   }
 
-  form.reset();
+  // WhatsApp
+  const waUrl =
+    "https://wa.me/" +
+    DEMO_WA +
+    "?text=" +
+    encodeURIComponent(msg);
+
+  // WhatsApp पर सीधे जाएं
+  window.location.href = waUrl;
 }
 
 document.getElementById("buyerForm").addEventListener("submit", function(e) {
