@@ -803,7 +803,43 @@ Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
   }
 
-  const waUrl = "https://wa.me/" + DEMO_WA + "?text=" + encodeURIComponent(msg);
+  /* Lead Tracker में save */
+  try {
+    const leads = getLeads();
+
+    const lead = {
+      id: generateLeadId(),
+      product: type === "buyer"
+        ? (obj.product || "-")
+        : (obj.products || "-"),
+      location: obj.location || "-",
+      supplier: type === "supplier"
+        ? (obj.business || "-")
+        : "Pending",
+      status: "New Lead",
+      commission: "-"
+    };
+
+    leads.push(lead);
+    saveLeads(leads);
+    renderLeads();
+
+  } catch (error) {
+    console.error("Lead Tracker Error:", error);
+  }
+
+  /* Success message */
+  const success = document.getElementById(successId);
+  if (success) {
+    success.style.display = "block";
+  }
+
+  /* WhatsApp */
+  const waUrl =
+    "https://wa.me/" +
+    DEMO_WA +
+    "?text=" +
+    encodeURIComponent(msg);
 
   window.location.href = waUrl;
 }
