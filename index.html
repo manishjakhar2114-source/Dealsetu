@@ -775,32 +775,6 @@ renderLeads();
 <script>
 const DEMO_WA = "919352735379";
 
-function addFormLead(obj, type) {
-  const leads = getLeads();
-
-  const lead = {
-    id: generateLeadId(),
-    product: type === "buyer"
-      ? (obj.product || "-")
-      : (obj.products || "-"),
-
-    location: obj.location || "-",
-
-    supplier: type === "supplier"
-      ? (obj.business || "-")
-      : "Pending",
-
-    status: "New Lead",
-    commission: "-"
-  };
-
-  leads.push(lead);
-  saveLeads(leads);
-  renderLeads();
-
-  return lead.id;
-}
-
 function sendWA(form, successId, type) {
   const d = new FormData(form);
   const obj = Object.fromEntries(d.entries());
@@ -808,8 +782,7 @@ function sendWA(form, successId, type) {
   let msg = "";
 
   if (type === "buyer") {
-    msg =
-`DealSetu Buyer Requirement
+    msg = `DealSetu Buyer Requirement
 
 Name: ${obj.name || "-"}
 Mobile: ${obj.phone || "-"}
@@ -819,8 +792,7 @@ Budget: ${obj.budget || "-"}
 Location: ${obj.location || "-"}
 Details: ${obj.details || "-"}`;
   } else {
-    msg =
-`DealSetu Supplier Enquiry
+    msg = `DealSetu Supplier Enquiry
 
 Business: ${obj.business || "-"}
 Contact: ${obj.contact || "-"}
@@ -831,27 +803,8 @@ Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
   }
 
-  // पहले Lead Tracker में save
-  try {
-    addFormLead(obj, type);
-  } catch (error) {
-    console.error("Lead save error:", error);
-  }
+  const waUrl = "https://wa.me/" + DEMO_WA + "?text=" + encodeURIComponent(msg);
 
-  // Success message
-  const success = document.getElementById(successId);
-  if (success) {
-    success.style.display = "block";
-  }
-
-  // WhatsApp
-  const waUrl =
-    "https://wa.me/" +
-    DEMO_WA +
-    "?text=" +
-    encodeURIComponent(msg);
-
-  // WhatsApp पर सीधे जाएं
   window.location.href = waUrl;
 }
 
