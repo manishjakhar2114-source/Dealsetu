@@ -334,8 +334,8 @@ function updateDashboard(){
     ).length;
 
 
-  document.getElementById("totalLeads").textContent =
-    total;
+  const totalEl = document.getElementById("totalLeads");
+if(totalEl) totalEl.textContent = total;
 
   document.getElementById("newLeads").textContent =
     newCount;
@@ -706,8 +706,6 @@ function clearAllLeads(){
 renderLeads();
 
 </script>
-</head>
-<body>
 <nav><div class="container navin">
 <a class="logo" href="#home">Deal<span>Setu</span></a>
 <div class="links"><a href="#how">कैसे काम करता है</a><a href="#categories">Categories</a><a href="#supplier">Supplier बनें</a><a class="navcta" href="#buyer">Requirement भेजें</a></div>
