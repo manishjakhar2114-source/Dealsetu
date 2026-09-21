@@ -603,7 +603,16 @@ Details: ${lead.details || "-"}
 
   alert(details);
 }
+function updateCommission(index, value) {
+  const leads = getLeads();
 
+  if (!leads[index]) return;
+
+  leads[index].commission = value.trim();
+
+  saveLeads(leads);
+  renderLeads();
+}
 /* Add Lead */
 
 document
