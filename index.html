@@ -542,19 +542,17 @@ function renderLeads(){
           ${escapeHTML(lead.commission || "-")}
         </td>
 
-        <td style="padding:10px">
+<td style="padding:10px">
 
-          <button
-            class="btn"
-            type="button"
-            onclick="
-              deleteLead(${realIndex})
-            "
-          >
-            Delete
-          </button>
+  <button class="btn" type="button" onclick="viewLeadDetails(${realIndex})">
+    👁️ Details
+  </button>
 
-        </td>
+  <button class="btn" type="button" onclick="deleteLead(${realIndex})" style="margin-left:6px">
+    Delete
+  </button>
+
+</td>
 
       </tr>
 
