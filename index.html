@@ -539,8 +539,14 @@ function renderLeads(){
         </td>
 
         <td style="padding:10px">
-          ${escapeHTML(lead.commission || "-")}
-        </td>
+  <input
+    type="text"
+    value="${escapeHTML(lead.commission || "")}"
+    placeholder="₹ / %"
+    onchange="updateCommission(${realIndex}, this.value)"
+    style="width:100px;padding:6px;border:1px solid #cbd5e1;border-radius:6px"
+  >
+</td>
 
 <td style="padding:10px">
 
