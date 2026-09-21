@@ -613,6 +613,26 @@ function updateCommission(index, value) {
   saveLeads(leads);
   renderLeads();
 }
+ function exportLeads() {
+  const leads = getLeads();
+
+  if (!leads.length) {
+    alert("Export karne ke liye koi lead nahi hai.");
+    return;
+  }
+
+  const data = JSON.stringify(leads, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "dealsetu-leads-backup.json";
+  link.click();
+
+  URL.revokeObjectURL(url);
+ }
 /* Add Lead */
 
 document
