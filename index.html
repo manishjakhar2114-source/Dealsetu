@@ -808,17 +808,37 @@ Details: ${obj.details || "-"}`;
     const leads = getLeads();
 
     const lead = {
-      id: generateLeadId(),
-      product: type === "buyer"
-        ? (obj.product || "-")
-        : (obj.products || "-"),
-      location: obj.location || "-",
-      supplier: type === "supplier"
-        ? (obj.business || "-")
-        : "Pending",
-      status: "New Lead",
-      commission: "-"
-    };
+
+  id: generateLeadId(),
+
+  type: type,
+
+  name: obj.name || "-",
+
+  business: obj.business || "-",
+
+  phone: obj.phone || "-",
+
+  product: type === "buyer"
+    ? (obj.product || "-")
+    : (obj.products || "-"),
+
+  qty: obj.qty || "-",
+
+  budget: obj.budget || "-",
+
+  location: obj.location || "-",
+
+  details: obj.details || "-",
+
+  supplier: type === "supplier"
+    ? (obj.business || "-")
+    : "Pending",
+
+  status: "New Lead",
+
+  commission: "-"
+};
 
     leads.push(lead);
     saveLeads(leads);
