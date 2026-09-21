@@ -573,6 +573,30 @@ function renderLeads(){
 
 }
 
+function viewLeadDetails(index) {
+  const leads = getLeads();
+  const lead = leads[index];
+
+  if (!lead) return;
+
+  const details = `
+Lead ID: ${lead.id || "-"}
+Type: ${lead.type || "-"}
+Name: ${lead.name || "-"}
+Business: ${lead.business || "-"}
+Mobile: ${lead.phone || "-"}
+Product/Service: ${lead.product || "-"}
+Quantity: ${lead.qty || "-"}
+Budget: ${lead.budget || "-"}
+Location: ${lead.location || "-"}
+Supplier: ${lead.supplier || "-"}
+Status: ${lead.status || "-"}
+Commission: ${lead.commission || "-"}
+Details: ${lead.details || "-"}
+`;
+
+  alert(details);
+}
 
 /* Add Lead */
 
