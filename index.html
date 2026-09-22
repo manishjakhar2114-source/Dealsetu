@@ -489,6 +489,9 @@ function renderLeads(){
           <th style="padding:10px">
             Commission
           </th>
+          <th style="padding:10px">
+            Notes
+            </th>
 
           <th style="padding:10px">
             Action
@@ -577,6 +580,14 @@ function renderLeads(){
     style="width:100px;padding:6px;border:1px solid #cbd5e1;border-radius:6px"
   >
 </td>
+<td style="padding:10px">
+  <textarea
+    rows="2"
+    placeholder="Follow-up notes..."
+    onchange="updateNotes(${realIndex}, this.value)"
+    style="width:150px;padding:6px;border:1px solid #cbd5e1;border-radius:6px"
+  >${escapeHTML(lead.notes || "")}</textarea>
+</td>
 
 <td style="padding:10px">
 
@@ -629,8 +640,8 @@ Supplier: ${lead.supplier || "-"}
 Status: ${lead.status || "-"}
 Commission: ${lead.commission || "-"}
 Details: ${lead.details || "-"}
+Follow-up Notes: ${lead.notes || "-"}
 `;
-
   alert(details);
 }
 function updateCommission(index, value) {
@@ -643,6 +654,16 @@ function updateCommission(index, value) {
   saveLeads(leads);
   renderLeads();
 }
+ function updateNotes(index, value) {
+  const leads = getLeads();
+
+  if (!leads[index]) return;
+
+  leads[index].notes = value.trim();
+
+  saveLeads(leads);
+  renderLeads();
+ }
  function exportLeads() {
   const leads = getLeads();
 
