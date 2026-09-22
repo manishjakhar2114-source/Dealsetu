@@ -296,23 +296,33 @@ function saveLeads(leads){
 
 /* Generate unique Lead ID */
 
-function generateLeadId(){
+function generateLeadId() {
+  const leads = getLeads();
 
-  let counter =
-    Number(
-      localStorage.getItem(LEAD_COUNTER_KEY) || "0"
-    );
+  let maxNumber = 0;
 
-  counter++;
+  leads.forEach(lead => {
+    if (!lead.id) return;
+
+    const match = String(lead.id).match(/^DS-(\d+)$/);
+
+    if (match) {
+      const number = parseInt(match[1], 10);
+
+      if (number > maxNumber) {
+        maxNumber = number;
+      }
+    }
+  });
+
+  const nextNumber = maxNumber + 1;
 
   localStorage.setItem(
     LEAD_COUNTER_KEY,
-    counter
+    String(nextNumber)
   );
 
-  return "DS-" +
-    String(counter).padStart(4,"0");
-
+  return "DS-" + String(nextNumber).padStart(4, "0");
 }
 
 
