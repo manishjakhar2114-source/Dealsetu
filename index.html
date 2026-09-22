@@ -237,6 +237,23 @@ footer{padding:35px 0;color:#64748b;border-top:1px solid var(--line);font-size:1
   📥 Export Leads
        </button>
 
+<input
+  type="file"
+  accept=".json"
+  onchange="importLeads(event)"
+  style="display:none"
+  id="importLeadsInput"
+>
+
+<button
+  class="btn"
+  type="button"
+  onclick="document.getElementById('importLeadsInput').click()"
+  style="margin-left:8px"
+>
+  📤 Import Backup
+</button>
+
       </div>
 
       <div id="leadTable"></div>
@@ -636,6 +653,37 @@ function updateCommission(index, value) {
 
   URL.revokeObjectURL(url);
  }
+
+function importLeads(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const leads = JSON.parse(e.target.result);
+
+      if (!Array.isArray(leads)) {
+        alert("Invalid backup file.");
+        return;
+      }
+
+      localStorage.setItem(LEAD_KEY, JSON.stringify(leads));
+
+      renderLeads();
+
+      alert("Leads successfully restored.");
+
+    } catch (error) {
+      alert("Backup file read nahi ho payi.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
 /* Add Lead */
 
 document
