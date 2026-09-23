@@ -622,6 +622,57 @@ function renderLeads(){
 
 }
 
+ }
+
+function editLead(index) {
+  const leads = getLeads();
+  const lead = leads[index];
+
+  if (!lead) return;
+
+  const name = prompt("Name:", lead.name || "");
+  if (name === null) return;
+
+  const business = prompt("Business:", lead.business || "");
+  if (business === null) return;
+
+  const phone = prompt("Mobile:", lead.phone || "");
+  if (phone === null) return;
+
+  const product = prompt("Product / Service:", lead.product || "");
+  if (product === null) return;
+
+  const qty = prompt("Quantity:", lead.qty || "");
+  if (qty === null) return;
+
+  const budget = prompt("Budget:", lead.budget || "");
+  if (budget === null) return;
+
+  const location = prompt("Location:", lead.location || "");
+  if (location === null) return;
+
+  const supplier = prompt("Supplier:", lead.supplier || "");
+  if (supplier === null) return;
+
+  const details = prompt("Details:", lead.details || "");
+  if (details === null) return;
+
+  lead.name = name.trim();
+  lead.business = business.trim();
+  lead.phone = phone.trim();
+  lead.product = product.trim();
+  lead.qty = qty.trim();
+  lead.budget = budget.trim();
+  lead.location = location.trim();
+  lead.supplier = supplier.trim();
+  lead.details = details.trim();
+
+  saveLeads(leads);
+  renderLeads();
+
+  alert("Lead successfully updated.");
+}
+
 function viewLeadDetails(index) {
   const leads = getLeads();
   const lead = leads[index];
