@@ -492,7 +492,9 @@ function renderLeads(){
           <th style="padding:10px">
             Notes
             </th>
-
+         <th style="padding:10px">
+  Follow-up
+</th>
           <th style="padding:10px">
             Action
           </th>
@@ -588,7 +590,14 @@ function renderLeads(){
     style="width:150px;padding:6px;border:1px solid #cbd5e1;border-radius:6px"
   >${escapeHTML(lead.notes || "")}</textarea>
 </td>
-
+<td style="padding:10px">
+  <input
+    type="date"
+    value="${escapeHTML(lead.followUpDate || "")}"
+    onchange="updateFollowUpDate(${realIndex}, this.value)"
+    style="padding:6px;border:1px solid #cbd5e1;border-radius:6px"
+  >
+</td>
 <td style="padding:10px">
 
   <button class="btn" type="button" onclick="viewLeadDetails(${realIndex})">
@@ -692,6 +701,7 @@ Status: ${lead.status || "-"}
 Commission: ${lead.commission || "-"}
 Details: ${lead.details || "-"}
 Follow-up Notes: ${lead.notes || "-"}
+Follow-up Date: ${lead.followUpDate || "-"}
 `;
   alert(details);
 }
@@ -711,6 +721,16 @@ function updateCommission(index, value) {
   if (!leads[index]) return;
 
   leads[index].notes = value.trim();
+
+  saveLeads(leads);
+  renderLeads();
+ }
+ function updateFollowUpDate(index, value) {
+  const leads = getLeads();
+
+  if (!leads[index]) return;
+
+  leads[index].followUpDate = value;
 
   saveLeads(leads);
   renderLeads();
