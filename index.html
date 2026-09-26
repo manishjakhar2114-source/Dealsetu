@@ -73,7 +73,23 @@ footer{padding:35px 0;color:#64748b;border-top:1px solid var(--line);font-size:1
         <h3 style="margin:8px 0">Completed</h3>
         <div id="completedLeads" style="font-size:28px;font-weight:900">0</div>
       </div>
+   <div class="card" style="text-align:center">
+  <div style="font-size:30px">🟢</div>
+  <h3 style="margin:8px 0">Today</h3>
+  <div id="todayFollowUps" style="font-size:28px;font-weight:900">0</div>
+</div>
 
+<div class="card" style="text-align:center">
+  <div style="font-size:30px">🔵</div>
+  <h3 style="margin:8px 0">Upcoming</h3>
+  <div id="upcomingFollowUps" style="font-size:28px;font-weight:900">0</div>
+</div>
+
+<div class="card" style="text-align:center">
+  <div style="font-size:30px">🔴</div>
+  <h3 style="margin:8px 0">Overdue</h3>
+  <div id="overdueFollowUps" style="font-size:28px;font-weight:900">0</div>
+</div>
     </div>
 
     <!-- Add Lead -->
@@ -366,7 +382,20 @@ function updateDashboard(){
       lead =>
         lead.status === "Completed"
     ).length;
+   const todayFollowUps =
+  leads.filter(
+    lead => getFollowUpStatus(lead.followUpDate) === "🟢 Today"
+  ).length;
 
+const upcomingFollowUps =
+  leads.filter(
+    lead => getFollowUpStatus(lead.followUpDate) === "🔵 Upcoming"
+  ).length;
+
+const overdueFollowUps =
+  leads.filter(
+    lead => getFollowUpStatus(lead.followUpDate) === "🔴 Overdue"
+  ).length;
 
   const totalEl = document.getElementById("totalLeads");
 if(totalEl) totalEl.textContent = total;
@@ -379,7 +408,14 @@ if(totalEl) totalEl.textContent = total;
 
   document.getElementById("completedLeads").textContent =
     completed;
+ const todayEl = document.getElementById("todayFollowUps");
+if (todayEl) todayEl.textContent = todayFollowUps;
 
+const upcomingEl = document.getElementById("upcomingFollowUps");
+if (upcomingEl) upcomingEl.textContent = upcomingFollowUps;
+
+const overdueEl = document.getElementById("overdueFollowUps");
+if (overdueEl) overdueEl.textContent = overdueFollowUps;
 }
 
 
