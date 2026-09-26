@@ -384,7 +384,21 @@ if(totalEl) totalEl.textContent = total;
 
 
 /* Render Leads */
+function getFollowUpStatus(date) {
+  if (!date) return "";
 
+  const today = new Date().toISOString().split("T")[0];
+
+  if (date === today) {
+    return "🟢 Today";
+  }
+
+  if (date > today) {
+    return "🔵 Upcoming";
+  }
+
+  return "🔴 Overdue";
+}
 function renderLeads(){
 
   const leads = getLeads();
@@ -597,6 +611,10 @@ function renderLeads(){
     onchange="updateFollowUpDate(${realIndex}, this.value)"
     style="padding:6px;border:1px solid #cbd5e1;border-radius:6px"
   >
+  <div style="margin-top:6px;font-size:13px">
+  ${getFollowUpStatus(lead.followUpDate)}
+</div>
+
 </td>
 <td style="padding:10px">
 
