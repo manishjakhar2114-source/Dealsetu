@@ -279,7 +279,25 @@ footer{padding:35px 0;color:#64748b;border-top:1px solid var(--line);font-size:1
   </div>
 </section>
 
+<dialog id="leadDetailsDialog" style="border:none;border-radius:16px;padding:0;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+  <div style="padding:20px">
+    <h3 style="margin-top:0">👁️ Lead Details</h3>
 
+    <div
+      id="leadDetailsContent"
+      style="white-space:pre-line;color:#334155;line-height:1.7"
+    ></div>
+
+    <button
+      class="btn"
+      type="button"
+      onclick="document.getElementById('leadDetailsDialog').close()"
+      style="margin-top:16px"
+    >
+      Close
+    </button>
+  </div>
+</dialog>
 <script>
 
 const LEAD_KEY = "dealsetu_leads";
@@ -757,7 +775,18 @@ Details: ${lead.details || "-"}
 Follow-up Notes: ${lead.notes || "-"}
 Follow-up Date: ${lead.followUpDate || "-"}
 `;
-  alert(details);
+
+  const content =
+    document.getElementById("leadDetailsContent");
+
+  const dialog =
+    document.getElementById("leadDetailsDialog");
+
+  if (!content || !dialog) return;
+
+  content.textContent = details;
+
+  dialog.showModal();
 }
 function updateCommission(index, value) {
   const leads = getLeads();
