@@ -1159,11 +1159,23 @@ Details: ${obj.details || "-"}`;
 
 document.getElementById("buyerForm").addEventListener("submit", function(e) {
   e.preventDefault();
+
+  if (!this.checkValidity()) {
+    this.reportValidity();
+    return;
+  }
+
   sendWA(this, "buyerSuccess", "buyer");
 });
 
 document.getElementById("supplierForm").addEventListener("submit", function(e) {
   e.preventDefault();
+
+  if (!this.checkValidity()) {
+    this.reportValidity();
+    return;
+  }
+
   sendWA(this, "supplierSuccess", "supplier");
 });
 </script>
