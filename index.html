@@ -1079,7 +1079,7 @@ renderLeads();
 <script>
 const DEMO_WA = "919352735379";
 
-function sendWA(form, successId, type) {
+async function sendWA(form, successId, type) {
   const d = new FormData(form);
   const obj = Object.fromEntries(d.entries());
 
@@ -1106,7 +1106,24 @@ Products/Services: ${obj.products || "-"}
 Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
   }
+    /* Supabase में Buyer Post save */
+    if (type === "buyer") {
+      const { error: supabaseError } = await sb
+        .from("buyer_posts")
+        .insert({
+          Name: obj.name || "-",
+          Product: obj.product || "-",
+          Quantity: obj.qty || null,
+          Budget: obj.budget || null,
+          Location: obj.location || "-",
+          Details: obj.details || null,
+          Status: "New"
+        });
 
+      if (supabaseError) {
+        console.error("Supabase Buyer Post Error:", supabaseError);
+      }
+    }
   /* Lead Tracker में save */
   try {
     const leads = getLeads();
