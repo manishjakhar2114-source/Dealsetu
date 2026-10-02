@@ -1109,6 +1109,7 @@ Details: ${obj.details || "-"}`;
  console.log("SUPABASE RESULT:", supabaseError);
     /* Supabase में Buyer Post save */
     if (type === "buyer") {
+     try {
       const { error: supabaseError } = await sb
         .from("buyer_posts")
         .insert({
@@ -1124,6 +1125,9 @@ Details: ${obj.details || "-"}`;
       if (supabaseError) {
         console.error("Supabase Buyer Post Error:", supabaseError);
       }
+    } catch (error) {
+    console.error("Supabase Connection Error:", error);
+  }
     }
   /* Lead Tracker में save */
   try {
