@@ -1112,13 +1112,13 @@ Details: ${obj.details || "-"}`;
       const { error: supabaseError } = await sb
         .from("buyer_posts")
         .insert({
-          name: obj.name || "-",
-          product: obj.product || "-",
-          quantity: obj.qty || null,
-          budget: obj.budget || null,
-          location: obj.location || "-",
-          details: obj.details || null,
-          status: "New"
+          Name: obj.name || "-",
+          Product: obj.product || "-",
+          Quantity: obj.qty || null,
+          Budget: obj.budget || null,
+          Location: obj.location || "-",
+          Details: obj.details || null,
+          Status: "New"
         });
 
       if (supabaseError) {
