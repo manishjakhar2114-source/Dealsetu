@@ -1122,6 +1122,7 @@ Details: ${obj.details || "-"}`;
 
       if (supabaseError) {
         console.error("Supabase Buyer Post Error:", supabaseError);
+       alert("Supabase Error: " + supabaseError.message);
       }
     }
   /* Lead Tracker में save */
