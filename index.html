@@ -1106,6 +1106,7 @@ Products/Services: ${obj.products || "-"}
 Business Type: ${obj.type || "-"}
 Details: ${obj.details || "-"}`;
   }
+ console.log("SUPABASE RESULT:", supabaseError);
     /* Supabase में Buyer Post save */
     if (type === "buyer") {
       const { error: supabaseError } = await sb
