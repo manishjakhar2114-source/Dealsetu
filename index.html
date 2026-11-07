@@ -1123,7 +1123,8 @@ Details: ${obj.details || "-"}`;
         });
 
       if (supabaseError) {
-        console.error("Supabase Buyer Post Error:", supabaseError);
+    alert("Supabase Error: " + supabaseError.message);
+    console.error("Supabase Buyer Post Error:", supabaseError);
       }
     } catch (error) {
     console.error("Supabase Connection Error:", error);
